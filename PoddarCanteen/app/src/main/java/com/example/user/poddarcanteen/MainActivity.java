@@ -19,6 +19,16 @@ public class MainActivity extends MaterialIntroActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                .getBoolean("isFirstRun", true);
+
+//        if (!isFirstRun) {
+//            Intent i=new Intent(MainActivity.this,LogIn.class);
+//            startActivity(i);
+//        }
+        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+                .putBoolean("isFirstRun", false).commit();
+
 
         addSlide(new SlideFragmentBuilder()
                         .backgroundColor(R.color.first_slide_background)
@@ -30,9 +40,11 @@ public class MainActivity extends MaterialIntroActivity {
                 new MessageButtonBehaviour(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showMessage("We provide solutions to make you love your work");
+                        Intent i=new Intent(MainActivity.this,LogIn.class);
+                        startActivity(i);
+//                        showMessage("We provide solutions to make you love your work");
                     }
-                }, "Work with love"));
+                }, "Get Start"));
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.second_slide_background)
@@ -69,7 +81,6 @@ public class MainActivity extends MaterialIntroActivity {
         super.onFinish();
         Intent i=new Intent(MainActivity.this,LogIn.class);
         startActivity(i);
-        Toast.makeText(this, "Try this library in your project! :)", Toast.LENGTH_SHORT).show();
     }
 }
         /*
