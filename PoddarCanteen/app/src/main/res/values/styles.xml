@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name="App_Theme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -36,9 +37,23 @@
         <item name="colorControlHighlight">@color/white</item>
         <item name="android:textColorHint">@color/iron</item>
 
-        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
-        <item name="android:colorButtonNormal">@color/colorPrimaryDark</item>
+        <item name="colorButtonNormal">@color/slide_background</item>
+        <item name="android:colorButtonNormal">@color/slide_background</item>
     </style>
+
+
+    <style name="textLabel" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/silver</item>
+        <!--The size of the text appear on label in false state -->
+        <item name="android:textSize">18sp</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/silver</item>
+        <item name="colorControlNormal">@color/silver</item>
+        <item name="colorControlActivated">@color/silver</item>
+    </style>
+
+
 
 </resources>
 

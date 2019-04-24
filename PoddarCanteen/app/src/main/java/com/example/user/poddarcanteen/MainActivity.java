@@ -27,53 +27,80 @@ public class MainActivity extends MaterialIntroActivity {
 //            startActivity(i);
 //        }
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+
                 .putBoolean("isFirstRun", false).commit();
 
 
+
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.first_slide_background)
-                        .buttonsColor(R.color.first_slide_buttons)
-                        .image(R.drawable.burger)
-                        .title("Organize your time with us")
-                        .description("Would you try?")
+                        .backgroundColor(R.color.slide_background)
+                        .buttonsColor(R.color.slide_buttons)
+                        .image(R.drawable.canteen)
+                        .title("Welcome to Podder Canteen")
+                        .description("Order food online")
                         .build(),
                 new MessageButtonBehaviour(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent i=new Intent(MainActivity.this,LogIn.class);
                         startActivity(i);
-//                        showMessage("We provide solutions to make you love your work");
                     }
                 }, "Get Start"));
 
-        addSlide(new SlideFragmentBuilder()
-                .backgroundColor(R.color.second_slide_background)
-                .buttonsColor(R.color.second_slide_buttons)
-                .title("Want more?")
-                .description("Go on")
-                .build());
 
 
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.third_slide_background)
-                        .buttonsColor(R.color.third_slide_buttons)
-                        .image(R.drawable.burger)
-                        .title("We provide best tools")
-                        .description("ever")
+                        .backgroundColor(R.color.slide_background)
+                        .buttonsColor(R.color.slide_buttons)
+                        .image(R.drawable.foodmenu)
+                        .title("Find food you love from menu")
+                        .description("Variety of food items")
                         .build(),
                 new MessageButtonBehaviour(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showMessage("Try us!");
+                        Intent i=new Intent(MainActivity.this,LogIn.class);
+                        startActivity(i);
                     }
-                }, "Tools"));
+                }, "Get Start"));
 
         addSlide(new SlideFragmentBuilder()
-                .backgroundColor(R.color.fourth_slide_background)
-                .buttonsColor(R.color.fourth_slide_buttons)
-                .title("That's it")
-                .description("Would you join us?")
-                .build());
+                        .backgroundColor(R.color.slide_background)
+                        .buttonsColor(R.color.slide_buttons)
+                        .image(R.drawable.queue)
+                        .title("Avoid long queues at the food counter")
+                        .description("Get food status updates")
+                        .build(),
+                new MessageButtonBehaviour(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i=new Intent(MainActivity.this,LogIn.class);
+                        startActivity(i);
+                    }
+                }, "Get Start"));
+
+
+        addSlide(new SlideFragmentBuilder()
+                        .backgroundColor(R.color.slide_background)
+                        .buttonsColor(R.color.slide_buttons)
+                        .image(R.drawable.payment)
+                        .title("Easy, cashless digital ordering")
+                        .description("Pay online or cash on delivery")
+                        .build(),
+                new MessageButtonBehaviour(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i=new Intent(MainActivity.this,LogIn.class);
+                        startActivity(i);
+                    }
+                }, "Get Start"));
+
+
+
+
+
+
+
     }
 
     @Override
