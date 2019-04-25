@@ -46,7 +46,7 @@ public class SignUp extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide(); 
+        getSupportActionBar().hide();
 
 //        FirebaseApp.initializeApp(this);
 
