@@ -22,10 +22,10 @@ public class MainActivity extends MaterialIntroActivity {
         Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
                 .getBoolean("isFirstRun", true);
 
-//        if (!isFirstRun) {
-//            Intent i=new Intent(MainActivity.this,LogIn.class);
-//            startActivity(i);
-//        }
+        if (!isFirstRun) {
+            Intent i=new Intent(MainActivity.this,LogIn.class);
+            startActivity(i);
+        }
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
 
                 .putBoolean("isFirstRun", false).commit();

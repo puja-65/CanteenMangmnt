@@ -24,7 +24,9 @@
             android:theme="@style/App_Theme" />
         <activity android:name=".AdmHome" />
         <activity android:name=".Settings" />
-        <activity android:name=".Account"></activity>
+        <activity android:name=".Account"/>
+        <activity android:name=".UserHome"/>
+
         <activity
             android:name=".IntroActivity"
             android:theme="@style/Theme.Intro" />

@@ -46,6 +46,8 @@ public class SignUp extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide(); 
+
 //        FirebaseApp.initializeApp(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -106,7 +108,7 @@ public class SignUp extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Exception e = task.getException();
-                            Log.w(TAG, "createUserWithEmail:failure", e.m);
+//                            Log.w(TAG, "createUserWithEmail:failure", e.getMessage());
                             Toast.makeText(SignUp.this, e.getMessage() ,
                                     Toast.LENGTH_SHORT).show();
                             onSignupFailed();

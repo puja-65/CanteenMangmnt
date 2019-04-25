@@ -11,10 +11,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseError;
 
 public class LogIn extends AppCompatActivity {
+
+    FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+
+
     private static final String TAG = "LogIn";
     private static final int REQUEST_SIGNUP = 0;
+    private static final int REQUEST_admHome = 1;
+    private static final int REQUEST_usrHome = 2;
+
     EditText _emailText, _passwordText;
     Button _loginButton;
     TextView _signupLink;
@@ -25,12 +46,15 @@ public class LogIn extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide(); //<< this
+
         setContentView(R.layout.activity_log_in);
         _emailText = findViewById(R.id.email_Input);
         _passwordText = findViewById(R.id.input_password);
         _loginButton = findViewById(R.id.btn_login);
         _signupLink = findViewById(R.id.link_signup);
 
+        mAuth = FirebaseAuth.getInstance();
 
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
@@ -64,28 +88,98 @@ public class LogIn extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LogIn.this,
+        _progressDialog = new ProgressDialog(LogIn.this,
                 R.style.Theme_AppCompat_DayNight_Dialog_Alert);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
+        _progressDialog.setIndeterminate(true);
+        _progressDialog.setMessage("Authenticating...");
+        _progressDialog.show();
 
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+//                            updateUI(user);
+                            findUserDetails();
+                        } else {
+                            _loginButton.setEnabled(true);
+                            Exception e = task.getException();
+//                            Log.w(TAG, "createUserWithEmail:failure", e.getMessage());
+                            Toast.makeText(LogIn.this, e.getMessage() ,
+                                    Toast.LENGTH_SHORT).show();
+                            _progressDialog.dismiss();
+                        }
+
+                        // ...
+                    }
+                });
+
         // TODO: Implement your own authentication logic here.
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+//        new android.os.Handler().postDelayed(
+//                new Runnable() {
+//                    public void run() {
+//                        // On complete call either onLoginSuccess or onLoginFailed
+//                        onLoginSuccess();
+//                        // onLoginFailed();
+//                        progressDialog.dismiss();
+//                    }
+//                }, 3000);
     }
 
+    void findUserDetails(){
+        String email = _emailText.getText().toString();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
+        ref.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                _progressDialog.dismiss();
+                for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                    String emailValue = (String) userSnapshot.child("email").getValue();
+                    String password = (String) userSnapshot.child("password").getValue();
+                    String role = (String) userSnapshot.child("role").getValue();
+                    String userId = (String) userSnapshot.child("userId").getValue();
+                    String username = (String) userSnapshot.child("username").getValue();
+                    user user = new user(userId, username,password, emailValue,role);
+                    _loginButton.setEnabled(true);
+                    if (user.role.equals("0")) {
+                        showUserHome();
+                        Log.w(TAG, "user ");
+                    } else {
+                        showAdminHome();
+                        Log.w(TAG, "admin ");
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+    }
+
+    void showAdminHome(){
+        Intent intent = new Intent(getApplicationContext(), AdmHome.class);
+        startActivityForResult(intent, REQUEST_admHome);
+                finish();
+        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+    }
+
+    void showUserHome(){
+        Intent intent = new Intent(getApplicationContext(), UserHome.class);
+        startActivityForResult(intent, REQUEST_usrHome);
+                finish();
+        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
