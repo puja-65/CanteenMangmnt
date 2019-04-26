@@ -28,11 +28,6 @@ public class AdmHome extends AppCompatActivity {
         t.syncState();
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
-//        getActionBar().setHomeButtonEnabled(true);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         nv = (NavigationView)findViewById(R.id.nv);
