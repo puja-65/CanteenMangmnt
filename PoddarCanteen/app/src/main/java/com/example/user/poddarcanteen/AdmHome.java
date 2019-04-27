@@ -57,19 +57,14 @@ public class AdmHome extends AppCompatActivity implements TabLayout.OnTabSelecte
 
         });
 
-//        setContentView(R.layout.activity_main);
-
-        //Adding toolbar to the activity
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
         //Initializing the tablayout
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
         //Adding the tabs using addTab() method
-        tabLayout.addTab(tabLayout.newTab().setText("Your Tab Title"));
-        tabLayout.addTab(tabLayout.newTab().setText("Your Tab Title"));
-        tabLayout.addTab(tabLayout.newTab().setText("Your Tab Title"));
+        tabLayout.addTab(tabLayout.newTab().setText("Received"));
+        tabLayout.addTab(tabLayout.newTab().setText("Cooking"));
+        tabLayout.addTab(tabLayout.newTab().setText("Delivered"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //Initializing viewPager

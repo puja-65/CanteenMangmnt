@@ -7,6 +7,13 @@
     android:layout_height="match_parent"
     tools:context="com.example.user.poddarcanteen.AdmHome"
     android:background="@android:color/holo_green_dark">
+    <android.support.design.widget.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:menu="@menu/menu_navigation"
+        android:layout_gravity="start"
+        android:id="@+id/nv">
+    </android.support.design.widget.NavigationView>
 
     <LinearLayout
         android:id="@+id/main_layout"
@@ -16,7 +23,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".activity-adm-home">
 
 
         <!-- our tablayout to display tabs  -->
@@ -36,15 +43,7 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.NavigationView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:menu="@menu/menu_navigation"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/navigation_header"
-        android:id="@+id/nv">
 
-    </android.support.design.widget.NavigationView>
 
 
 
