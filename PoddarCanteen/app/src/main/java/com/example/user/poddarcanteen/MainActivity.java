@@ -33,8 +33,8 @@ public class MainActivity extends MaterialIntroActivity {
 
 
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.slide_background)
-                        .buttonsColor(R.color.slide_buttons)
+                        .backgroundColor(R.color.colorPrimary)
+                        .buttonsColor(R.color.colorPrimaryDark)
                         .image(R.drawable.canteen)
                         .title("Welcome to Podder Canteen")
                         .description("Order food online")
@@ -50,8 +50,8 @@ public class MainActivity extends MaterialIntroActivity {
 
 
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.slide_background)
-                        .buttonsColor(R.color.slide_buttons)
+                        .backgroundColor(R.color.colorPrimary)
+                        .buttonsColor(R.color.colorPrimaryDark)
                         .image(R.drawable.foodmenu)
                         .title("Find food you love from menu")
                         .description("Variety of food items")
@@ -65,8 +65,8 @@ public class MainActivity extends MaterialIntroActivity {
                 }, "Get Start"));
 
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.slide_background)
-                        .buttonsColor(R.color.slide_buttons)
+                        .backgroundColor(R.color.colorPrimary)
+                        .buttonsColor(R.color.colorPrimaryDark)
                         .image(R.drawable.queue)
                         .title("Avoid long queues at the food counter")
                         .description("Get food status updates")
@@ -81,8 +81,8 @@ public class MainActivity extends MaterialIntroActivity {
 
 
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.slide_background)
-                        .buttonsColor(R.color.slide_buttons)
+                        .backgroundColor(R.color.colorPrimary)
+                        .buttonsColor(R.color.colorPrimaryDark)
                         .image(R.drawable.payment)
                         .title("Easy, cashless digital ordering")
                         .description("Pay online or cash on delivery")

@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,7 +9,7 @@
 
     </style>
 
-    <style name="App_Theme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="App_Theme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -32,28 +32,48 @@
 
         <item name="android:windowBackground">@color/colorPrimary</item>
 
-        <item name="colorControlNormal">@color/iron</item>
-        <item name="colorControlActivated">@color/white</item>
-        <item name="colorControlHighlight">@color/white</item>
-        <item name="android:textColorHint">@color/iron</item>
+        <!--<item name="colorControlNormal">@color/iron</item>-->
+        <!--<item name="colorControlActivated">@color/white</item>-->
+        <!--<item name="colorControlHighlight">@color/white</item>-->
+        <!--<item name="android:textColorHint">@color/iron</item>-->
 
-        <item name="colorButtonNormal">@color/slide_background</item>
-        <item name="android:colorButtonNormal">@color/slide_background</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:colorButtonNormal">@color/colorPrimary</item>
     </style>
 
 
     <style name="textLabel" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/silver</item>
+        <item name="android:textColorHint">@color/colorPrimaryDark</item>
         <!--The size of the text appear on label in false state -->
         <item name="android:textSize">18sp</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorAccent">@color/silver</item>
-        <item name="colorControlNormal">@color/silver</item>
-        <item name="colorControlActivated">@color/silver</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
     </style>
 
 
+
+
+    <!--&lt;!&ndash; for tab bar &ndash;&gt;-->
+
+    <!--<style name="AppTabLayout" parent="Widget.Design.TabLayout">-->
+
+        <!--<item name="tabIndicatorColor">?attr/colorAccent</item>-->
+        <!--<item name="tabIndicatorHeight">4dp</item>-->
+        <!--<item name="tabPaddingStart">6dp</item>-->
+        <!--<item name="tabPaddingEnd">6dp</item>-->
+        <!--<item name="tabBackground">?attr/selectableItemBackground</item>-->
+        <!--<item name="tabTextAppearance">@style/AppTabTextAppearance</item>-->
+        <!--<item name="tabSelectedTextColor">@color/colorPrimary</item>-->
+    <!--</style>-->
+    <!--&lt;!&ndash; for text &ndash;&gt;-->
+    <!--<style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">-->
+        <!--<item name="android:textSize">15sp</item>-->
+        <!--<item name="android:textColor">@color/colorPrimary</item>-->
+        <!--<item name="textAllCaps">false</item>-->
+    <!--</style>-->
 
 </resources>
 

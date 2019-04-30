@@ -3,5 +3,7 @@
     <string name="Open">BPPIMT Canteen</string>
     <string name="Close">BPPIMT Canteen</string>
     <string name="getStarted">Get Start</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
 
 </resources>

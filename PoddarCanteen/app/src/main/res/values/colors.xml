@@ -1,43 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff8d00</color>
-    <color name="colorPrimaryDark">#ff8d00</color>
-    <color name="colorAccent">#F7F0E6</color>
+        <color name="colorPrimary">#720d5d</color>
+        <color name="colorPrimaryDark">#182C61</color>
+        <color name="colorAccent">#e30425</color>
+        <color name="primaryText">#000000</color>
+        <color name="buttonNormal">#e30425</color>
+        <color name="buttonHighlight">#ff554f</color>
+        <color name="buttonText">#FFFFFF</color>
+        <color name="bgColore">#F7F1E7</color>
 
 
 
+        <!--<color name="colorPrimary">#EBEEF4</color>-->
+        <!--<color name="colorPrimaryDark">#F1591E</color>-->
+        <!--<color name="colorAccent">#ff8d00</color>-->
 
-
-
-
-    <color name="slide_background">#F7F0E6</color>
-    <color name="slide_buttons">#ff7700</color>
-
-
-    <!--Splash Screen-->
-    <item name="splash_background" type="color">@color/colorPrimary</item>
-
-
-
-
-    <color name="black">#000000</color>
-    <color name="jet">#222222</color>
-    <color name="oil">#333333</color>
-    <color name="monsoon">#777777</color>
-    <color name="jumbo">#888888</color>
-    <color name="aluminum">#999999</color>
-    <color name="base">#AAAAAA</color>
-    <color name="iron">#CCCCCC</color>
-    <color name="white">#000000</color>
-
-    <color name="silver">#7f8c8d</color>
-
-
-
-
-    <color name="primary">#3F51B5</color>
-    <color name="primary_dark">#303F9F</color>
-    <color name="accent">#FF4081</color>
 </resources>
 
 
