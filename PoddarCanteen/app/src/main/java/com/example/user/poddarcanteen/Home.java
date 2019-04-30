@@ -38,12 +38,12 @@ TextView result;
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
+  /*      NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
-                if (id == R.id.Settings) {
+                if (id == R.id.settings) {
                     String emailva = getIntent().getStringExtra("EMAIL");
                     Intent i = new Intent(getApplicationContext(), Settings.class);
                     i.putExtra("EMAIL", emailva);
@@ -56,7 +56,7 @@ TextView result;
                 }
                 return true;
             }
-        });
+        });*/
         result = findViewById(R.id.result);
         ViewData();
     }

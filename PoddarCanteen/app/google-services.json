@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "399164424281-mt582v68a4sqmhlh9kbojimp1rlvg478.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.user.poddarcanteen",
+            "certificate_hash": "4ec76d12b6f90835d2d1f5ccaa0d1d906e0e354b"
+          }
+        },
+        {
           "client_id": "399164424281-e13kkhtqqaf6lceuo4an1db2d6mb6f5t.apps.googleusercontent.com",
           "client_type": 3
         }

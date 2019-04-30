@@ -1,62 +1,65 @@
 package com.example.user.poddarcanteen;
 
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
-public class AdmHome extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
+public class AdmHome extends AppCompatActivity implements TabLayout.OnTabSelectedListener  {
     private TabLayout tabLayout;
     //This is our viewPager
     private ViewPager viewPager;
 
-    private DrawerLayout dl;
-    private ActionBarDrawerToggle t;
-    private NavigationView nv;
-
+//    private DrawerLayout dl;
+//    private ActionBarDrawerToggle t;
+ //   private NavigationView nv;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_adm_home);
-            dl = (DrawerLayout)findViewById(R.id.activity_adm_home);
-        t = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
 
+  /*      dl = (DrawerLayout) findViewById(R.id.activity_adm_home);
+        t = new ActionBarDrawerToggle(this, dl, R.string.Open, R.string.Close);
+        t.setDrawerIndicatorEnabled(true);
         dl.addDrawerListener(t);
         t.syncState();
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        nv = (NavigationView)findViewById(R.id.nv);
+        nv = (NavigationView) findViewById(R.id.nv);
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
-                switch(id)
-                {
+                switch (id) {
                     case R.id.account:
-                        Toast.makeText(AdmHome.this, "My Account",Toast.LENGTH_SHORT).show();
-//                    case R.id.settings:
-//                        Toast.makeText(MainActivity.this, "Settings",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AdmHome.this, "My Account", Toast.LENGTH_SHORT).show();
+                    case R.id.settings:
+                        Toast.makeText(AdmHome.this, "Settings", Toast.LENGTH_SHORT).show();
 //                    case R.id.mycart:
 //                        Toast.makeText(MainActivity.this, "My Cart",Toast.LENGTH_SHORT).show();
+                    case R.id.add_Item:
+                        Intent i = new Intent(AdmHome.this, Add_Item.class);
+                        startActivity(i);
                     default:
                         return true;
                 }
             }
-
         });
-
+*/
 
         //Initializing the tablayout
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -80,15 +83,40 @@ public class AdmHome extends AppCompatActivity implements TabLayout.OnTabSelecte
         tabLayout.setOnTabSelectedListener(this);
 
     }
+/*
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
+        return t.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+*/
 
-            if(t.onOptionsItemSelected(item))
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.menu_navigation,menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.add_item:
+                Intent i=new Intent(getApplicationContext(),Add_Item.class);
+                startActivity(i);
                 return true;
-
-            return super.onOptionsItemSelected(item);
+            case R.id.delete_item:
+                Toast.makeText(getApplicationContext(),"Delete",Toast.LENGTH_LONG).show();
+                return true;
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
@@ -104,7 +132,6 @@ public class AdmHome extends AppCompatActivity implements TabLayout.OnTabSelecte
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
-
 
 }
 
