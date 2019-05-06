@@ -1,100 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true"
     android:background="@drawable/bg">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="24dp"
-        android:paddingTop="30dp"
-        android:paddingRight="24dp">
+        android:layout_height="match_parent"
+        tools:context="com.daimajia.slider.demo.MainActivity"
+        android:background="#00000000">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:background="@drawable/foodplaceholder" >
+            <ImageView
+                android:id="@+id/overview_image"
+                android:contentDescription="image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                />
+        </LinearLayout>
+
+        <com.daimajia.slider.library.SliderLayout
+            android:id="@+id/slider"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:auto_cycle="true"
+            app:indicator_visibility="visible"
+            app:pager_animation="ZoomOut"
+            app:pager_animation_span="1100" />
+        <com.daimajia.slider.library.Indicators.PagerIndicator
+            android:id="@+id/custom_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:selected_color="#0095BF"
+            app:unselected_color="#55333333"
+            app:selected_drawable="@drawable/addicon"
+            app:shape="oval"
+            app:selected_padding_left="5dp"
+            app:selected_padding_right="5dp"
+            app:unselected_padding_left="5dp"
+            app:unselected_padding_right="5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            app:selected_width="6dp"
+            app:selected_height="6dp"
+            app:unselected_width="6dp"
+            app:unselected_height="6dp"
+            android:layout_marginBottom="20dp"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="bottom|end"
+            android:clickable="true"
+            android:src="@drawable/attachment"
+            app:fabCustomSize="50dp"
+            app:backgroundTint="#ECF0F1"
+            android:onClick="btnBrowser_Click"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingTop="220dp"
+            android:paddingRight="24dp">
 
-            <!-- Food Image  -->
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="200dp"
-                android:layout_height="175dp"
-                android:background="@drawable/ic_image_black_24dp" />
+            <!-- Food Name Label -->
 
-            <!-- Food Image Button -->
-            <Button
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:theme="@style/textLabel">
+
+                <EditText
+                    android:id="@+id/food_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Food Name"
+                    android:inputType="text" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Food Price Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:theme="@style/textLabel">
+
+                <EditText
+                    android:id="@+id/food_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Food Price"
+                    android:inputType="numberDecimal" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Food Type Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:theme="@style/textLabel">
+
+                <AutoCompleteTextView
+                    android:id="@+id/food_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Food Type"
+                    android:inputType="text"></AutoCompleteTextView>
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Insert Food Button -->
+            <android.support.v7.widget.AppCompatButton
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
-                android:onClick="btnBrowser_Click"
+                android:onClick="btnUpload_Click"
                 android:padding="12dp"
-                android:text="Choose Image From Gallery" />
+                android:text="Add Food Item" />
 
         </LinearLayout>
-        <!-- Food Name Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:theme="@style/textLabel">
 
-            <EditText
-                android:id="@+id/food_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Food Name"
-                android:inputType="text" />
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- Food Price Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:theme="@style/textLabel">
-
-            <EditText
-                android:id="@+id/food_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Food Price"
-                android:inputType="numberDecimal" />
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- Food Type Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:theme="@style/textLabel">
-
-            <AutoCompleteTextView
-                android:id="@+id/food_type"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Food Type"
-                android:inputType="text"></AutoCompleteTextView>
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- Insert Food Button -->
-        <android.support.v7.widget.AppCompatButton
-            android:onClick="btnUpload_Click"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
-            android:text="Insert Food Item" />
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>

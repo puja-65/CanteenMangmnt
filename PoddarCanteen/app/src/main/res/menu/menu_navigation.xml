@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/profile"
+        android:icon="@android:drawable/ic_menu_camera"
+        android:title="My Profile" />
 
     <item
-        android:id="@+id/add_item"
-        android:title="Add Item"
-        app:showAsAction="never"/>
+        android:id="@+id/food"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:title="Food" />
+
     <item
-        android:id="@+id/delete_item"
-        android:title="Delete Item"
-        app:showAsAction="never"/>
+        android:id="@+id/about"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:title="About" />
+
+    <item
+        android:id="@+id/logoff"
+        android:icon="@android:drawable/ic_menu_call"
+        android:title="Log Off" />
 
 </menu>

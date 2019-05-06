@@ -1,16 +1,18 @@
 package com.example.user.poddarcanteen;
 
+import java.util.ArrayList;
+
 public class Food {
     private String foodName;
     private String foodPrice;
     private String foodType;
-    private String url;
+    public ArrayList<String> serverurlList = new ArrayList<String>();
 
-    public Food(String foodName,String foodPrice,String foodType,String url){
+    public Food(String foodName,String foodPrice,String foodType,ArrayList<String> url){
         this.foodName=foodName;
         this.foodPrice=foodPrice;
         this.foodType=foodType;
-        this.url=url;
+        this.serverurlList=url;
     }
 
     public Food() {
@@ -25,7 +27,7 @@ public class Food {
     public String getFoodType(){
         return foodType;
     }
-    public String url(){
-        return url;
+    public ArrayList<String> getserverurlList(){
+        return serverurlList;
     }
 }

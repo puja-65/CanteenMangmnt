@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,11 +16,11 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
+import android.os.Handler;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,14 +35,35 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Add_Item extends AppCompatActivity {
-    ImageView imageDisplay;
+
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.Indicators.PagerIndicator;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.daimajia.slider.library.Tricks.ViewPagerEx;
+
+public class Add_Item extends AppCompatActivity implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
+
+    ProgressDialog dialog;
+
+    private SliderLayout mDemoSlider;
+    HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
+
+
+    FloatingActionButton fab;
     private EditText name_food, price_food;
 
     StorageReference mStorageRef;
     DatabaseReference mdatabaseRef;
-    public Uri imgUri;
+    private StorageTask mUploadTask;
+
+    public ArrayList<Uri> urlList = new ArrayList<Uri>();
+    public ArrayList<String> serverurlList = new ArrayList<String>();
+
     private StorageTask uploadTask;
 
 
@@ -52,28 +74,12 @@ public class Add_Item extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add__item);
-        imageDisplay = findViewById(R.id.image);
+        dialog=new ProgressDialog(this);
+        setUpSlider();
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("image/");
-        mdatabaseRef = FirebaseDatabase.getInstance().getReference("image");
-  /*      btncaptureimg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FileChooser();
-            }
-        });
-        btn_confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(uploadTask!= null && uploadTask.isInProgress()){
-                    Toast.makeText(getApplicationContext(),"Upload In Progress",Toast.LENGTH_LONG).show();
-                }else{
-                    FileUploader();
-                }
-            }
-        });
-        mdatabaseRef = FirebaseDatabase.getInstance().getReference("food");
-*/
+        mStorageRef = FirebaseStorage.getInstance().getReference("/");
+        mdatabaseRef = FirebaseDatabase.getInstance().getReference("foodItem");
+
 
         name_food = findViewById(R.id.food_name);
         price_food = findViewById(R.id.food_price);
@@ -85,16 +91,37 @@ public class Add_Item extends AppCompatActivity {
         type_food.setAdapter(a);
 
 
-/*
-        insertData = findViewById(R.id.btn_insert);
-        insertData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addFood();
-                Toast.makeText(getApplicationContext(),"Inserted",Toast.LENGTH_LONG).show();
-            }
-        });*/
+
+
     }
+
+    public void setUpSlider(){
+        mDemoSlider = (SliderLayout)findViewById(R.id.slider);
+        mDemoSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
+
+        for(String name : file_maps.keySet()){
+            TextSliderView textSliderView = new TextSliderView(this);
+            // initialize a SliderLayout
+            textSliderView
+                    .description(name)
+                    .image(file_maps.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(this);
+
+            //add your extra information
+            textSliderView.bundle(new Bundle());
+            textSliderView.getBundle()
+                    .putString("extra",name);
+
+            mDemoSlider.addSlider(textSliderView);
+        }
+        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.ZoomIn);
+        mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        mDemoSlider.setCustomAnimation(new DescriptionAnimation());
+        mDemoSlider.setDuration(4000);
+        mDemoSlider.addOnPageChangeListener(this);
+    }
+
 
     private String getExtension(Uri uri) {
         ContentResolver cr = getContentResolver();
@@ -102,27 +129,7 @@ public class Add_Item extends AppCompatActivity {
         return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
     }
 
- /*   private void FileUploader() {
-        StorageReference Ref = mStorageRef.child(System.currentTimeMillis()+","+getExtension(imguri));
 
-        uploadTask=Ref.putFile(imguri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        Toast.makeText(getApplicationContext(), "Image Uploaded Successfully", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        // ...
-                    }
-                });
-    }
-*/
     public void btnBrowser_Click(View v) {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -135,11 +142,29 @@ public class Add_Item extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1234 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imgUri = data.getData();
+            Uri imgUri = data.getData();
 //            imageDisplay.setImageURI(imgUri);
             try{
                 Bitmap bm=MediaStore.Images.Media.getBitmap(getContentResolver(),imgUri);
-                imageDisplay.setImageBitmap(bm);
+                TextSliderView textSliderView = new TextSliderView(this);
+                // initialize a SliderLayout
+                textSliderView
+                        .description("")
+                        .image(String.valueOf(imgUri))
+                        .setScaleType(BaseSliderView.ScaleType.Fit)
+                        .setOnSliderClickListener(this);
+
+                //add your extra information
+                textSliderView.bundle(new Bundle());
+                textSliderView.getBundle()
+                        .putString("extra",bm.toString());
+
+                mDemoSlider.addSlider(textSliderView);
+                urlList.add(imgUri);
+
+
+
+//                imageDisplay.setImageBitmap(bm);
             }catch (FileNotFoundException e){
                 e.printStackTrace();
             }catch (IOException e){
@@ -149,66 +174,110 @@ public class Add_Item extends AppCompatActivity {
     }
 
     public void btnUpload_Click(View v){
+        dialog.setTitle("Uploading Image");
+        dialog.show();
+        uploaFiles();
+    }
 
-        if(imgUri!=null){
-            final ProgressDialog dialog=new ProgressDialog(this);
-            dialog.setTitle("Uploading Image");
-            dialog.show();
+    public void uploaFiles() {
 
-            //GEt the Storage reference
-            StorageReference ref=mStorageRef.child("image/"+System.currentTimeMillis() + "," + getExtension(imgUri));
+        if (mUploadTask != null && mUploadTask.isInProgress()) {
+            Toast.makeText(getApplicationContext(), "Upload in progress", Toast.LENGTH_LONG).show();
+        } else {
+            Uri imgUrl = urlList.get(0);
 
-            //Add file to reference
-            ref.putFile(imgUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                            // Dismiss dialog when success
-                            dialog.dismiss();
-                            //Display success toast msg
-                            String _foodName = name_food.getText().toString();
-                            String _foodPrice = price_food.getText().toString();
-                            String _foodType = type_food.getText().toString();
-
-                            if (!TextUtils.isEmpty(_foodName) && !TextUtils.isEmpty(_foodPrice) && !TextUtils.isEmpty(_foodType)) {
-                                String uploadId=mdatabaseRef.push().getKey();
-                                Food food = new Food(_foodName, _foodPrice, _foodType, taskSnapshot.getStorage().getDownloadUrl().toString());
-
-                                mdatabaseRef.child(uploadId).setValue(food);
-                                name_food.setText("");
-                                price_food.setText("");
-                                type_food.setText("");
-
-                                Toast.makeText(getApplicationContext(),"Update Successfully",Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Please Insert the Food Name,Price and Type", Toast.LENGTH_LONG).show();
+            if (imgUrl != null) {
+                final StorageReference ref = mStorageRef.child("foods/" + System.currentTimeMillis() + "." + getExtension(imgUrl));
+                mUploadTask = ref.putFile(imgUrl).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //uploadProgress.setProgress(0);
                             }
+                        }, 500);
+                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
 
+                                serverurlList.add(uri.toString());
+                            urlList.remove(0);
+                            if (urlList.size() > 0) {
+                                uploaFiles();
+                            } else {
+                                saveDataInDb();
+                            }
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
 
+                        //Show upload progress
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
 
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Dismiss dialog when error
-                            dialog.dismiss();
-                            //Display error toast msg
-                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
-                            //Show upload progress
-                            double progress=(100*taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
-                            dialog.setMessage("Uploading...");
-                        }
-                    });
-        }else{
-            Toast.makeText(getApplicationContext(), "Please Select Image", Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                Toast.makeText(getApplicationContext(), "No Image Selected, Please Select Image", Toast.LENGTH_LONG).show();
+            }
         }
     }
+
+    void saveDataInDb(){
+        //Display success toast msg
+        String _foodName = name_food.getText().toString();
+        String _foodPrice = price_food.getText().toString();
+        String _foodType = type_food.getText().toString();
+
+        if (!TextUtils.isEmpty(_foodName) && !TextUtils.isEmpty(_foodPrice) && !TextUtils.isEmpty(_foodType)) {
+            String uploadId=mdatabaseRef.push().getKey();
+            Food food = new Food(_foodName, _foodPrice, _foodType, serverurlList);
+
+            mdatabaseRef.child(uploadId).setValue(food);
+            name_food.setText("");
+            price_food.setText("");
+            type_food.setText("");
+            serverurlList.clear();
+            urlList.clear();
+            mDemoSlider.removeAllSliders();
+            dialog.dismiss();
+            Toast.makeText(getApplicationContext(),"Update Successfully",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Please Insert the Food Name,Price and Type", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        // To prevent a memory leak on rotation, make sure to call stopAutoCycle() on the slider before activity or fragment is destroyed
+        mDemoSlider.stopAutoCycle();
+        super.onStop();
+    }
+
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+        Toast.makeText(this,slider.getBundle().get("extra") + "",Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+    @Override
+    public void onPageSelected(int position) {
+//        Log.d("Slider Demo", "Page Changed: " + position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {}
 
 }
