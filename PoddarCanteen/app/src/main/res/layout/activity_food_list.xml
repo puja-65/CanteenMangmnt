@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:background="#720d5d"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width = "match_parent"
+        android:layout_height = "match_parent"
+        android:orientation = "vertical">
+        <ListView
+            android:id = "@+id/list"
+            android:layout_below="@+id/tab_layout"
+            android:layout_width = "match_parent"
+            android:layout_height = "match_parent"
+            android:paddingTop="60dp"
+            android:dividerHeight = "10dp"
+            android:footerDividersEnabled = "false"
+            android:headerDividersEnabled = "false"
+            android:divider="@android:color/transparent"/>
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -22,8 +52,8 @@
             app:backgroundTint="#16A085"
             app:borderWidth="0dp"
             app:elevation="6dp"
-            app:fabSize="normal"/>
+            app:fabSize="normal"
+            />
     </FrameLayout>
-    <!---->
 
 </android.support.constraint.ConstraintLayout>
