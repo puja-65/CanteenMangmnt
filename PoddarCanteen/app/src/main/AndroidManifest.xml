@@ -27,7 +27,7 @@
         <activity android:name=".Settings" />
         <activity android:name=".Account" />
         <activity android:name=".UserHome" />
-        <activity android:name=".admFoodList" />
+        <activity android:name=".admFoodList"/>
         <activity
             android:name=".IntroActivity"
             android:theme="@style/Theme.Intro" />

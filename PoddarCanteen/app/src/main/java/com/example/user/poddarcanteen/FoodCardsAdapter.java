@@ -18,9 +18,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.picasso.Picasso;
 
 public class FoodCardsAdapter extends ArrayAdapter<Food> {
+    private Context mcontext;
 
     public FoodCardsAdapter(Context context) {
         super(context, R.layout.food_card_item);
@@ -29,7 +32,7 @@ public class FoodCardsAdapter extends ArrayAdapter<Food> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -50,11 +53,12 @@ public class FoodCardsAdapter extends ArrayAdapter<Food> {
         holder.tvPrice.setText("RS:"+food.getFoodPrice() );
         if (food.serverurlList.size() > 0) {
             Uri url = Uri.parse(food.serverurlList.get(0));
-            Picasso.get()
-                    .load(String.valueOf(url))
-                    .placeholder(R.drawable.foodplaceholder)
-                    .error(R.drawable.foodplaceholder)
-                    .into(holder.imageView);
+//            Picasso.with(mcontext)
+//                    .load(food.serverurlList.get(0))
+//                    .placeholder(R.drawable.ic_image_black_24dp)
+//                    .fit()
+//                    .centerCrop()
+//                    .into(holder.imageView);
         }
         return convertView;
     }
@@ -73,46 +77,7 @@ public class FoodCardsAdapter extends ArrayAdapter<Food> {
         }
     }
 
-    void downloadfile(String fileurl,ImageView img)
-    {
-        URL myfileurl =null;
-        try
-        {
-            myfileurl= new URL(fileurl);
 
-        }
-        catch (MalformedURLException e)
-        {
-
-            e.printStackTrace();
-        }
-
-        try
-        {
-            HttpURLConnection conn= (HttpURLConnection)myfileurl.openConnection();
-            conn.setDoInput(true);
-            conn.connect();
-            int length = conn.getContentLength();
-            int[] bitmapData =new int[length];
-            byte[] bitmapData2 =new byte[length];
-            InputStream is = conn.getInputStream();
-            BitmapFactory.Options options = new BitmapFactory.Options();
-
-            Bitmap bmImg = BitmapFactory.decodeStream(is,null,options);
-
-            img.setImageBitmap(bmImg);
-
-            //dialog.dismiss();
-        }
-        catch(IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-//          Toast.makeText(PhotoRating.this, "Connection Problem. Try Again.", Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
 
 }
 

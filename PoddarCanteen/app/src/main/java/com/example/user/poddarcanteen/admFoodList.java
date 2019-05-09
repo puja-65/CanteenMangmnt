@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ public class admFoodList  extends AppCompatActivity {
         lvCards.setAdapter(adapter);
 
         mdatabaseRef = FirebaseDatabase.getInstance().getReference("foodItem");
+//        mdatabaseRef.orderByChild("email").equalTo("").addListenerForSingleValueEvent(new ValueEventListener() {
 
         fab = (FloatingActionButton)findViewById(R.id.fab);
 
@@ -59,19 +61,15 @@ public class admFoodList  extends AppCompatActivity {
 
 
     private void getAllOrderFromFirebase() {
-        foodList = new ArrayList<>();
-         final List<Food> universityList = new ArrayList<>();
-        mdatabaseRef.addValueEventListener(new ValueEventListener() {
+
+        mdatabaseRef.orderByChild("foodType").equalTo("Main Item - Veg").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                universityList.clear();
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     Food food = postSnapshot.getValue(Food.class);
-                    universityList.add(food);
                     adapter.add(food);
                 }
                 // here you can access to name property like university.name
-                System.out.println("universityList: " + universityList);
             }
 
             @Override
@@ -81,6 +79,8 @@ public class admFoodList  extends AppCompatActivity {
         });
 
     }
+
+
 }
 
 

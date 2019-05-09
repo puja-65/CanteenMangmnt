@@ -24,6 +24,7 @@ public class MainActivity extends MaterialIntroActivity {
 
         if (!isFirstRun) {
             Intent i=new Intent(MainActivity.this,LogIn.class);
+            finish();
             startActivity(i);
         }
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()

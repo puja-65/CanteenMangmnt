@@ -67,7 +67,7 @@ public class Add_Item extends AppCompatActivity implements BaseSliderView.OnSlid
     private StorageTask uploadTask;
 
 
-    String[] counter = {" Dessert", " Snacks", " Main Item - NonVeg", " Main Item - Veg"};
+    String[] counter = {"Drink","Dessert", "Snacks", "Main Item - NonVeg", "Main Item - Veg"};
     AutoCompleteTextView type_food;
 
     @Override
