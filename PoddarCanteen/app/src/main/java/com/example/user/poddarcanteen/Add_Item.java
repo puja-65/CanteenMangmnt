@@ -67,7 +67,7 @@ public class Add_Item extends AppCompatActivity implements BaseSliderView.OnSlid
     private StorageTask uploadTask;
 
 
-    String[] counter = {"Drink","Dessert", "Snacks", "Main Item - NonVeg", "Main Item - Veg"};
+    String[] counter = {"Drink","Dessert", "Snacks", "Main Item - NonVeg", "Main Item - Veg","Chineese"};
     AutoCompleteTextView type_food;
 
     @Override
@@ -180,54 +180,57 @@ public class Add_Item extends AppCompatActivity implements BaseSliderView.OnSlid
     }
 
     public void uploaFiles() {
-
-        if (mUploadTask != null && mUploadTask.isInProgress()) {
-            Toast.makeText(getApplicationContext(), "Upload in progress", Toast.LENGTH_LONG).show();
+        if (urlList.size() <= 0 ) {
+            saveDataInDb();
         } else {
-            Uri imgUrl = urlList.get(0);
-
-            if (imgUrl != null) {
-                final StorageReference ref = mStorageRef.child("foods/" + System.currentTimeMillis() + "." + getExtension(imgUrl));
-                mUploadTask = ref.putFile(imgUrl).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //uploadProgress.setProgress(0);
-                            }
-                        }, 500);
-                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-
-                                serverurlList.add(uri.toString());
-                            urlList.remove(0);
-                            if (urlList.size() > 0) {
-                                uploaFiles();
-                            } else {
-                                saveDataInDb();
-                            }
-                            }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
-                        //Show upload progress
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-
-                    }
-                });
+            if (mUploadTask != null && mUploadTask.isInProgress()) {
+                Toast.makeText(getApplicationContext(), "Upload in progress", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getApplicationContext(), "No Image Selected, Please Select Image", Toast.LENGTH_LONG).show();
+                Uri imgUrl = urlList.get(0);
+
+                if (imgUrl != null) {
+                    final StorageReference ref = mStorageRef.child("foods/" + System.currentTimeMillis() + "." + getExtension(imgUrl));
+                    mUploadTask = ref.putFile(imgUrl).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //uploadProgress.setProgress(0);
+                                }
+                            }, 500);
+                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+
+                                    serverurlList.add(uri.toString());
+                                    urlList.remove(0);
+                                    if (urlList.size() > 0) {
+                                        uploaFiles();
+                                    } else {
+                                        saveDataInDb();
+                                    }
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            //Show upload progress
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+
+                        }
+                    });
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Image Selected, Please Select Image", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -240,7 +243,7 @@ public class Add_Item extends AppCompatActivity implements BaseSliderView.OnSlid
 
         if (!TextUtils.isEmpty(_foodName) && !TextUtils.isEmpty(_foodPrice) && !TextUtils.isEmpty(_foodType)) {
             String uploadId=mdatabaseRef.push().getKey();
-            Food food = new Food(_foodName, _foodPrice, _foodType, serverurlList);
+            Food food = new Food(uploadId,_foodName, _foodPrice, _foodType, serverurlList);
 
             mdatabaseRef.child(uploadId).setValue(food);
             name_food.setText("");
@@ -250,7 +253,7 @@ public class Add_Item extends AppCompatActivity implements BaseSliderView.OnSlid
             urlList.clear();
             mDemoSlider.removeAllSliders();
             dialog.dismiss();
-            Toast.makeText(getApplicationContext(),"Update Successfully",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Save Successfully",Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getApplicationContext(), "Please Insert the Food Name,Price and Type", Toast.LENGTH_LONG).show();
         }

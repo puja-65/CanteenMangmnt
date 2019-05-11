@@ -2,6 +2,7 @@ package com.example.user.poddarcanteen;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -39,6 +42,15 @@ public class FoodImageAdapter extends RecyclerView.Adapter<FoodImageAdapter.Imag
         imageViewHolder._nameFood.setText(foodCur.getFoodName());
         imageViewHolder._priceFood.setText(foodCur.getFoodPrice());
         imageViewHolder._typeFood.setText(foodCur.getFoodType());
+        if (foodCur.serverurlList.size() > 0) {
+            Uri url = Uri.parse(foodCur.serverurlList.get(0));
+
+            Glide.with(this.mcontext)
+                    .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .skipMemoryCache(true)
+                    .into(imageViewHolder._imageFood);
+        }
 
 //        ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
 //
@@ -57,6 +69,7 @@ public class FoodImageAdapter extends RecyclerView.Adapter<FoodImageAdapter.Imag
 //                .centerCrop()
 //                .into(imageViewHolder._imageFood);
     }
+
 
     @Override
     public int getItemCount() {

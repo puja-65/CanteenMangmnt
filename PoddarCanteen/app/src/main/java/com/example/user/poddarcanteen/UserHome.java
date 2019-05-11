@@ -77,7 +77,6 @@ public class UserHome extends AppCompatActivity {
                         //Change background color
                         cardView.setCardBackgroundColor(Color.parseColor("#FF6F00"));
                         Toast.makeText(UserHome.this, "State : True", Toast.LENGTH_SHORT).show();
-
                     } else {
                         //Change background color
                         cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -93,12 +92,26 @@ public class UserHome extends AppCompatActivity {
         //Loop all child item of Main Grid
         for (int i = 0; i < mainGrid.getChildCount(); i++) {
             //You can see , all child item is CardView , so we just cast object to CardView
-            CardView cardView = (CardView) mainGrid.getChildAt(i);
+            final CardView cardView = (CardView) mainGrid.getChildAt(i);
             final int finalI = i;
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     Intent intent = new Intent(getApplicationContext(), admFoodList.class);
+                    if (finalI == 0) {
+                        intent.putExtra("foodType","Main Item - NonVeg");
+                    } else if (finalI == 1) {
+                        intent.putExtra("foodType","Main Item - Veg");
+                    } else if (finalI == 2) {
+                        intent.putExtra("foodType","Chineese");
+                    } else if (finalI == 3) {
+                        intent.putExtra("foodType","Dessert");
+                    } else if (finalI == 4) {
+                        intent.putExtra("foodType","Drink");
+                    } else if (finalI == 5) {
+                        intent.putExtra("foodType","Snacks");
+                    }
                     startActivityForResult(intent, REQUEST_FODLIST);
                     overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }

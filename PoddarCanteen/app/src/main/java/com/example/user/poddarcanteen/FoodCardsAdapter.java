@@ -18,6 +18,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.picasso.Picasso;
@@ -53,12 +55,12 @@ public class FoodCardsAdapter extends ArrayAdapter<Food> {
         holder.tvPrice.setText("RS:"+food.getFoodPrice() );
         if (food.serverurlList.size() > 0) {
             Uri url = Uri.parse(food.serverurlList.get(0));
-//            Picasso.with(mcontext)
-//                    .load(food.serverurlList.get(0))
-//                    .placeholder(R.drawable.ic_image_black_24dp)
-//                    .fit()
-//                    .centerCrop()
-//                    .into(holder.imageView);
+
+            Glide.with(this.getContext())
+                    .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .skipMemoryCache(true)
+                    .into(holder.imageView);
         }
         return convertView;
     }

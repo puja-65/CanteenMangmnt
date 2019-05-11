@@ -4,8 +4,8 @@
 
     <item
         android:id="@+id/home"
-        android:title="Home"
-        android:icon="@drawable/home"
+        android:title="Food"
+        android:icon="@drawable/food"
         app:showAsAction="never"/>
     <item
         android:id="@+id/search"
