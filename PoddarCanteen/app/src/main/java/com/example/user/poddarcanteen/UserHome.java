@@ -108,9 +108,9 @@ public class UserHome extends AppCompatActivity {
                     } else if (finalI == 3) {
                         intent.putExtra("foodType","Dessert");
                     } else if (finalI == 4) {
-                        intent.putExtra("foodType","Drink");
-                    } else if (finalI == 5) {
                         intent.putExtra("foodType","Snacks");
+                    } else if (finalI == 5) {
+                        intent.putExtra("foodType","Drink");
                     }
                     startActivityForResult(intent, REQUEST_FODLIST);
                     overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
