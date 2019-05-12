@@ -198,7 +198,7 @@ public class foodDetails extends AppCompatActivity implements BaseSliderView.OnS
                         int total = quantityValue * priceValue;
                         ArrayList<cartfood> foodList = new ArrayList<cartfood>();
 
-                        cartfood cartFood = new cartfood(food.getFoodId(),String.valueOf(quantityValue),String.valueOf(total));
+                        cartfood cartFood = new cartfood(food.getFoodName(),food.getFoodId(),String.valueOf(quantityValue),String.valueOf(total));
                         foodList.add(cartFood);
                         cartValue cart = new cartValue(uploadId,userId,foodList);
 
@@ -238,7 +238,7 @@ public class foodDetails extends AppCompatActivity implements BaseSliderView.OnS
                                 cartFood.setquantity(String.valueOf(quantityValue));
                                 cartFood.settotal(String.valueOf(total));
                             } else {
-                                cartFood = new cartfood(food.getFoodId(),String.valueOf(quantityValue),String.valueOf(total));
+                                cartFood = new cartfood(food.getFoodName(),food.getFoodId(),String.valueOf(quantityValue),String.valueOf(total));
                                 foodList.add(cartFood);
                             }
                         }

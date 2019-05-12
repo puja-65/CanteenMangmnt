@@ -95,11 +95,11 @@ public class AdmHome extends AppCompatActivity implements OnItemSelectedListener
 
             @Override
             public void callNext() {
-                if (cartList.size() > 0) {
-                    cartValue cart = cartList.get(0);
-                    adapter.add(cart);
-                    cartList.remove(0);
-                }
+//                if (cartList.size() > 0) {
+//                    cartValue cart = cartList.get(0);
+//                    adapter.add(cart);
+//                    cartList.remove(0);
+//                }
 
             }
         });
@@ -129,12 +129,14 @@ public class AdmHome extends AppCompatActivity implements OnItemSelectedListener
                 cartValue cart = new cartValue();
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     cart = postSnapshot.getValue(cartValue.class);
-                    cartList.add(cart);
-                }
-                if (cartList.size() > 0) {
+//                    cartList.add(cart);
                     adapter.add(cart);
-                    cartList.remove(0);
+
                 }
+//                if (cartList.size() > 0) {
+//                    adapter.add(cart);
+//                    cartList.remove(0);
+//                }
 
 
             }

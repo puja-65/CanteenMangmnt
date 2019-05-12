@@ -60,7 +60,6 @@ public class orderadapter extends ArrayAdapter<cartValue> {
     ArrayList food;
     TextView tv;
     cartValue cart;
-    orderadapter.ViewHolder holderView;
     public orderadapter(Context context) {
         super(context, R.layout.orderitem);
         mdatabaseRef = FirebaseDatabase.getInstance().getReference("users");
@@ -81,15 +80,11 @@ public class orderadapter extends ArrayAdapter<cartValue> {
         } else {
             holder = (orderadapter.ViewHolder) convertView.getTag();
         }
-        holderView = holder;
 
-        cart  = null;
-        food = null;
-        tv = null;
+
         cart = getItem(position);
         cartValue carttemp = getItem(position);
-
-        food = (ArrayList) carttemp.getFoodList().clone();
+        food = (ArrayList) carttemp.getFoodList();
         tv = holder.items;
         mdatabaseRef = FirebaseDatabase.getInstance().getReference("users");
         mdatabaseRef.orderByChild("userId").equalTo(carttemp.getUserID()).addValueEventListener(new ValueEventListener() {
@@ -98,9 +93,9 @@ public class orderadapter extends ArrayAdapter<cartValue> {
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     user userValue = postSnapshot.getValue(user.class);
                     holder.name.setText(userValue.username);
-                    getFoodDetails();
                 }
             }
+
 
             @Override
             public void onCancelled(DatabaseError firebaseError) {
@@ -108,6 +103,16 @@ public class orderadapter extends ArrayAdapter<cartValue> {
             }
         });
 
+        for(int l=0; l<=food.size() - 1; l++){
+
+            cartfood cFood = (cartfood) food.get(0);
+            tv.append("*");
+            tv.append(cFood.getFoodName());
+            tv.append("  {");
+            tv.append(cFood.getquantity());
+            tv.append("}");
+            tv.append("\n");
+        }
 
 
         holder.accept.setOnClickListener(new View.OnClickListener() {
@@ -140,40 +145,7 @@ public class orderadapter extends ArrayAdapter<cartValue> {
 
 
     void getFoodDetails(){
-        mdatabaseRef = FirebaseDatabase.getInstance().getReference("foodItem");
-        if (food.size()> 0) {
-            final  cartfood cFood = (cartfood) food.get(0);
-            mdatabaseRef.orderByChild("foodId").equalTo(cFood.getfoodID()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                        Food foodValue = postSnapshot.getValue(Food.class);
-                        tv.append("*");
-                        tv.append(foodValue.getFoodName());
-                        tv.append("  {");
-                        tv.append(cFood.getquantity());
-                        tv.append("}");
-                        tv.append("\n");
-                    }
-                    if (food.size()>0) {
-                        food.remove(0);
-                        getFoodDetails();
-                    } else  {
-                        mOnDataChangeListener.callNext();
 
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
-                }
-            });
-
-        } else {
-            mOnDataChangeListener.callNext();
-        }
     }
 
 

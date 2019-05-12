@@ -4,12 +4,14 @@ import java.io.Serializable;
 
 public class cartfood implements Serializable {
     private String foodID;
+    private String foodName;
     private String quantity;
     private String total;
 
 
 
-    public cartfood(String foodID,String quantity,String total){
+    public cartfood(String foodName,String foodID,String quantity,String total){
+        this.foodName = foodName;
         this.foodID=foodID;
         this.quantity=quantity;
         this.total=total;
@@ -18,6 +20,8 @@ public class cartfood implements Serializable {
 
     public cartfood() {
     }
+    public void setfoodName(String foodname){
+        this.foodName=foodname; }
 
     public void setfoodID(String foodID){
         this.foodID=foodID; }
@@ -37,6 +41,9 @@ public class cartfood implements Serializable {
     }
     public String gettotal(){
         return total;
+    }
+    public String getFoodName(){
+        return foodName;
     }
 
 
