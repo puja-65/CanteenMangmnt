@@ -35,7 +35,7 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/list_item_card_button_1"
+            android:id="@+id/accept"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dip"
@@ -50,7 +50,7 @@
             />
 
         <Button
-            android:id="@+id/list_item_card_button_2"
+            android:id="@+id/reject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dip"

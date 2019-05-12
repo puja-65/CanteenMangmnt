@@ -126,15 +126,18 @@ public class foodDetails extends AppCompatActivity implements BaseSliderView.OnS
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     currentCart = postSnapshot.getValue(cartValue.class);
                 }
+            if (currentCart != null) {
+                 ArrayList<cartfood> foodList = currentCart.getFoodList();
+                 for (int y=0;y<foodList.size();y++) {
+                      cartfood cartFood = foodList.get(y);
+                     if ( cartFood.getfoodID().toString().equals(food.getFoodId())) {
+                      quantity.setText(""+cartFood.getquantity());
 
-                ArrayList<cartfood> foodList = currentCart.getFoodList();
-                for (int y=0;y<foodList.size();y++) {
-                    cartfood cartFood = foodList.get(y);
-                    if ( cartFood.getfoodID().toString().equals(food.getFoodId())) {
-                        quantity.setText(""+cartFood.getquantity());
-
-                    }
                 }
+
+    }
+}
+
 
             }
             @Override

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +27,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Handler;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -31,6 +35,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -38,10 +43,24 @@ import com.squareup.picasso.Picasso;
 
 public class orderadapter extends ArrayAdapter<cartValue> {
 
+    public interface OnDataChangeOrderadapterListener{
+        public void onDataChanged(int position, cartValue cart , int action);
+        public void callNext();
+
+    }
+
+    OnDataChangeOrderadapterListener mOnDataChangeListener;
+    public void setOnDataChangeListener(OnDataChangeOrderadapterListener onDataChangeListener){
+        mOnDataChangeListener = onDataChangeListener;
+    }
+
+
     private Context mcontext;
     private DatabaseReference mdatabaseRef;
     ArrayList food;
     TextView tv;
+    cartValue cart;
+    orderadapter.ViewHolder holderView;
     public orderadapter(Context context) {
         super(context, R.layout.orderitem);
         mdatabaseRef = FirebaseDatabase.getInstance().getReference("users");
@@ -49,7 +68,7 @@ public class orderadapter extends ArrayAdapter<cartValue> {
     }
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final orderadapter.ViewHolder holder;
 
         if (convertView == null) {
@@ -62,11 +81,18 @@ public class orderadapter extends ArrayAdapter<cartValue> {
         } else {
             holder = (orderadapter.ViewHolder) convertView.getTag();
         }
+        holderView = holder;
 
-        cartValue cart = getItem(position);
-        food = cart.getFoodList();
+        cart  = null;
+        food = null;
+        tv = null;
+        cart = getItem(position);
+        cartValue carttemp = getItem(position);
+
+        food = (ArrayList) carttemp.getFoodList().clone();
+        tv = holder.items;
         mdatabaseRef = FirebaseDatabase.getInstance().getReference("users");
-        mdatabaseRef.orderByChild("userId").equalTo(cart.getUserID()).addValueEventListener(new ValueEventListener() {
+        mdatabaseRef.orderByChild("userId").equalTo(carttemp.getUserID()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
@@ -83,7 +109,22 @@ public class orderadapter extends ArrayAdapter<cartValue> {
         });
 
 
-        tv = holder.items;
+
+        holder.accept.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(mOnDataChangeListener != null){
+                    mOnDataChangeListener.onDataChanged(position,cart,1);
+                }
+            }
+        });
+
+        holder.reject.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(mOnDataChangeListener != null){
+                    mOnDataChangeListener.onDataChanged(position,cart,2);
+                }
+            }
+        });
 
 
 
@@ -92,11 +133,16 @@ public class orderadapter extends ArrayAdapter<cartValue> {
         return convertView;
     }
 
+    void getUserDetails(){
+
+
+    }
+
 
     void getFoodDetails(){
         mdatabaseRef = FirebaseDatabase.getInstance().getReference("foodItem");
         if (food.size()> 0) {
-            cartfood cFood = (cartfood) food.get(0);
+            final  cartfood cFood = (cartfood) food.get(0);
             mdatabaseRef.orderByChild("foodId").equalTo(cFood.getfoodID()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
@@ -104,10 +150,19 @@ public class orderadapter extends ArrayAdapter<cartValue> {
                         Food foodValue = postSnapshot.getValue(Food.class);
                         tv.append("*");
                         tv.append(foodValue.getFoodName());
+                        tv.append("  {");
+                        tv.append(cFood.getquantity());
+                        tv.append("}");
                         tv.append("\n");
                     }
-                    food.remove(0);
-                    getFoodDetails();
+                    if (food.size()>0) {
+                        food.remove(0);
+                        getFoodDetails();
+                    } else  {
+                        mOnDataChangeListener.callNext();
+
+                    }
+
                 }
 
                 @Override
@@ -116,21 +171,35 @@ public class orderadapter extends ArrayAdapter<cartValue> {
                 }
             });
 
+        } else {
+            mOnDataChangeListener.callNext();
         }
     }
+
+
+
+
+
 
     static class ViewHolder {
         TextView name;
         TextView items;
         TextView quantity;
         TextView totalPrice;
+        Button accept;
+        Button reject;
 
         ViewHolder(View view) {
             name = (TextView) view.findViewById(R.id.name);
             items = (TextView) view.findViewById(R.id.list_items);
+            reject = (Button) view.findViewById(R.id.reject);
+            accept = (Button) view.findViewById(R.id.accept);
+
 //            quantity = (TextView) view.findViewById(R.id.tvCartItemQuantity);
 //            totalPrice = (TextView) view.findViewById(R.id.tvCartItemPrice);
         }
     }
+
+
 
 }

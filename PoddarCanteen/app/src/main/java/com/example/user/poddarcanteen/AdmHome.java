@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class AdmHome extends AppCompatActivity implements OnItemSelectedListener
 
     private static final int REQUEST_FoodList = 1;
     private ArrayList<cartValue> orderList = new ArrayList<cartValue>();;
-    ArrayList<String> userList = new ArrayList<String> ();
+    ArrayList<cartValue> cartList = new ArrayList<cartValue> ();
 
 
     FloatingActionButton fab;
@@ -81,26 +83,58 @@ public class AdmHome extends AppCompatActivity implements OnItemSelectedListener
             }
         });
 
+        adapter.setOnDataChangeListener(new orderadapter.OnDataChangeOrderadapterListener(){
+            @Override
+            public void onDataChanged(int position, cartValue cart , int action) {
+                if (action == 1) {
+                    saveorder(cart,"delivered");
+                } else  {
+                    saveorder(cart,"rejected");
+                }
+            }
+
+            @Override
+            public void callNext() {
+                if (cartList.size() > 0) {
+                    cartValue cart = cartList.get(0);
+                    adapter.add(cart);
+                    cartList.remove(0);
+                }
+
+            }
+        });
+
+        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getAllOrder();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+
     }
 
+
     public void getAllOrder(){
+        mdatabaseRef = FirebaseDatabase.getInstance().getReference("order");
         final List<Food> universityList = new ArrayList<>();
         mdatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 orderList.clear();
-                userList.clear();
-                userList = new ArrayList<String>();
-
-
+                cartList.clear();
+                cartList = new ArrayList<cartValue>();
+                adapter.clear();
+                cartValue cart = new cartValue();
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    cartValue cart = postSnapshot.getValue(cartValue.class);
-                    adapter.add(cart);
-
+                    cart = postSnapshot.getValue(cartValue.class);
+                    cartList.add(cart);
                 }
-
-
-
+                if (cartList.size() > 0) {
+                    adapter.add(cart);
+                    cartList.remove(0);
+                }
 
 
             }
@@ -126,6 +160,42 @@ public class AdmHome extends AppCompatActivity implements OnItemSelectedListener
     public void onNothingSelected(AdapterView<?> parent) {
         // TODO Auto-generated method stub
 
+    }
+
+    public void saveorder(final cartValue cart,String path){
+        mdatabaseRef = FirebaseDatabase.getInstance().getReference(path);
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        mdatabaseRef.child(cart.getCartID()).setValue(cart);
+                        makeDelivery(cart);
+                    }
+                }, 3000);
+
+    }
+
+
+    public void makeDelivery(cartValue cart){
+
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        Query applesQuery = ref.child("order").orderByChild("cartID").equalTo(cart.getCartID());
+
+        applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+                    appleSnapshot.getRef().removeValue();
+                }
+                getAllOrder();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+//                Log.e(TAG, "onCancelled", databaseError.toException());
+            }
+        });
     }
 
 
