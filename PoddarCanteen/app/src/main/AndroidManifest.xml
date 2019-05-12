@@ -29,10 +29,19 @@
         <activity android:name=".UserHome" />
         <activity android:name=".admFoodList"/>
         <activity android:name=".foodDetails"/>
+        <activity android:name=".profilescreen"/>
+        <activity android:name=".cartActivity"/>
+        <activity android:name=".payment"/>
+
         <activity
             android:name=".IntroActivity"
             android:theme="@style/Theme.Intro" />
         <activity android:name=".Add_Item"></activity>
+
+
+
     </application>
+
+
 
 </manifest>

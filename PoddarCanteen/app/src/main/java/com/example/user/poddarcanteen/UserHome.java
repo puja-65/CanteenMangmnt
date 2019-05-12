@@ -128,18 +128,24 @@ public class UserHome extends AppCompatActivity {
             Fragment fragment;
             switch (item.getItemId()) {
                 case R.id.home:
-                    Toast.makeText(UserHome.this, "Home", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), profilescreen.class);
+                    startActivity(intent);
+                    finish();
+                    overridePendingTransition(0,0);
                     return true;
                 case R.id.search:
-                    Toast.makeText(UserHome.this, "search", Toast.LENGTH_SHORT).show();
                     return true;
-                case R.id.profile:
-                    Toast.makeText(UserHome.this, "profile", Toast.LENGTH_SHORT).show();
+                case R.id.cart:
+                    Intent intentProfile = new Intent(getApplicationContext(), cartActivity.class);
+                    startActivity(intentProfile);
+                    finish();
+                    overridePendingTransition(0,0);
                     return true;
             }
             return false;
         }
     };
+
 }
 
 

@@ -34,7 +34,6 @@ public class admFoodList  extends AppCompatActivity {
     private ArrayList<Food> foodList = new ArrayList<Food>();;
     private ListView listView;
     FoodCardsAdapter adapter;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +44,6 @@ public class admFoodList  extends AppCompatActivity {
         adapter = new FoodCardsAdapter(this);
         listView.setAdapter(adapter);
         mdatabaseRef = FirebaseDatabase.getInstance().getReference("foodItem");
-//        mdatabaseRef.orderByChild("email").equalTo("").addListenerForSingleValueEvent(new ValueEventListener() {
 
         fab = (FloatingActionButton)findViewById(R.id.fab);
 
@@ -64,7 +62,9 @@ public class admFoodList  extends AppCompatActivity {
 
 
     private void getAllOrderFromFirebase() {
-        String value= getIntent().getStringExtra("foodType");
+        String value = getIntent().getStringExtra("foodType");
+        final String searchString = getIntent().getStringExtra("searchstring");
+
         if (value != null && value.length() > 0) {
             fab.hide();
             mdatabaseRef.orderByChild("foodType").equalTo(value).addValueEventListener(new ValueEventListener() {
@@ -73,8 +73,8 @@ public class admFoodList  extends AppCompatActivity {
                     foodList.clear();
                     for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                         Food food = postSnapshot.getValue(Food.class);
-                        adapter.add(food);
                         foodList.add(food);
+                        adapter.add(food);
                     }
                     // here you can access to name property like university.name
                 }
@@ -93,8 +93,16 @@ public class admFoodList  extends AppCompatActivity {
                     foodList.clear();
                     for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                         Food food = postSnapshot.getValue(Food.class);
-                        foodList.add(food);
-                        adapter.add(food);
+                        if (searchString != null) {
+                            fab.hide();
+                            if (food.getFoodName().toLowerCase().contains(searchString.toLowerCase())) {
+                                adapter.add(food);
+                                foodList.add(food);
+                            }
+                        } else {
+                            adapter.add(food);
+                            foodList.add(food);
+                        }
                     }
                 }
 
@@ -116,9 +124,7 @@ public class admFoodList  extends AppCompatActivity {
                 intent.putExtra("food", (Serializable) food);
                 startActivityForResult(intent, 1);
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                Toast.makeText(getApplicationContext(),
-                        "Click ListItem Number " + position, Toast.LENGTH_LONG)
-                        .show();
+
             }
         });
 

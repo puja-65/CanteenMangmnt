@@ -30,8 +30,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseError;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +53,7 @@ public class foodDetails extends AppCompatActivity implements BaseSliderView.OnS
     private SliderLayout mDemoSlider;
     Food food;
     ProgressDialog _progressDialog;
+    cartValue currentCart;
 
     DatabaseReference mdatabaseRef;
     @Override
@@ -58,16 +64,10 @@ public class foodDetails extends AppCompatActivity implements BaseSliderView.OnS
         price = findViewById(R.id.price);
         name = findViewById(R.id.nameLable);
         category = findViewById(R.id.category);
-        addToCart = findViewById(R.id.cartAdd);
         mdatabaseRef = FirebaseDatabase.getInstance().getReference("cart");
+        addToCart = findViewById(R.id.cartAdd);
 
-        addToCart.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                addValueToCart();
-            }
-        });
 
         Intent i = getIntent();
         food = (Food) getIntent().getExtras().getSerializable("food");
@@ -76,6 +76,7 @@ public class foodDetails extends AppCompatActivity implements BaseSliderView.OnS
         name.setText(food.getFoodName());
         category.setText(food.getFoodType());
         setUpSlider();
+        getCartDetailsForUser();
         ImageView plusImg = (ImageView) findViewById(R.id.plus);
         plusImg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -99,6 +100,46 @@ public class foodDetails extends AppCompatActivity implements BaseSliderView.OnS
                 }
 
                 // your code here
+            }
+        });
+
+        addToCart.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (currentCart == null) {
+                    addValueToCart();
+                } else  {
+                    updateValueToCart();
+                }
+            }
+        });
+    }
+
+
+    public void getCartDetailsForUser(){
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        final String userId = currentFirebaseUser.getUid();
+        mdatabaseRef.orderByChild("userID").equalTo(userId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    currentCart = postSnapshot.getValue(cartValue.class);
+                }
+
+                ArrayList<cartfood> foodList = currentCart.getFoodList();
+                for (int y=0;y<foodList.size();y++) {
+                    cartfood cartFood = foodList.get(y);
+                    if ( cartFood.getfoodID().toString().equals(food.getFoodId())) {
+                        quantity.setText(""+cartFood.getquantity());
+
+                    }
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
     }
@@ -142,37 +183,78 @@ public class foodDetails extends AppCompatActivity implements BaseSliderView.OnS
         _progressDialog.setIndeterminate(true);
         _progressDialog.setMessage("Adding...");
         _progressDialog.show();
-        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
 
-        final String userId = currentFirebaseUser.getUid();
-        String uploadId=mdatabaseRef.push().getKey();
+                new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+                        final String userId = currentFirebaseUser.getUid();
+                        String uploadId=mdatabaseRef.push().getKey();
+                        int quantityValue = Integer.parseInt(quantity.getText().toString());
+                        int priceValue = Integer.parseInt(food.getFoodPrice().toString());
+                        int total = quantityValue * priceValue;
+                        ArrayList<cartfood> foodList = new ArrayList<cartfood>();
 
-        int quantityValue = Integer.parseInt(quantity.getText().toString());
-        int priceValue = Integer.parseInt(food.getFoodPrice().toString());
-        int total = quantityValue * priceValue;
-        ArrayList<cartfood> foodList = new ArrayList<cartfood>();
+                        cartfood cartFood = new cartfood(food.getFoodId(),String.valueOf(quantityValue),String.valueOf(total));
+                        foodList.add(cartFood);
+                        cartValue cart = new cartValue(uploadId,userId,foodList);
 
-        cartfood cartFood = new cartfood(food.getFoodId(),String.valueOf(quantityValue),String.valueOf(total));
-        foodList.add(cartFood);
-//        HashMap<String,String> map =  new HashMap<String,String>();
-//        map.put(String.valueOf(quantityValue),"quantity");
-//        map.put(String.valueOf(total),"totalPrice");
-//
-//        HashMap<HashMap,String> foodmap =  new HashMap<HashMap,String>();
-//        foodmap.put(map,food.getFoodId());
+                        mdatabaseRef.child(uploadId).setValue(cart);
+                        _progressDialog.dismiss();
+                        Intent intent = new Intent(getApplicationContext(), cartActivity.class);
+                        startActivityForResult(intent, 1);
+                        finish();
+                        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                    }
+                }, 3000);
 
-
-        cartValue cart = new cartValue(uploadId,userId,foodList);
-
-        mdatabaseRef.child(uploadId).setValue(cart);
-        _progressDialog.dismiss();
-//        String email = _emailText.getText().toString();
-//        String password = _passwordText.getText().toString();
 
 
     }
 
-    @Override
+    public void updateValueToCart() {
+
+        _progressDialog = new ProgressDialog(foodDetails.this,
+                R.style.Theme_AppCompat_DayNight_Dialog_Alert);
+        _progressDialog.setIndeterminate(true);
+        _progressDialog.setMessage("Updating...");
+        _progressDialog.show();
+
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        int quantityValue = Integer.parseInt(quantity.getText().toString());
+                        int priceValue = Integer.parseInt(food.getFoodPrice().toString());
+                        int total = quantityValue * priceValue;
+
+                        ArrayList<cartfood> foodList = currentCart.getFoodList();
+                        for (int y=0;y<foodList.size();y++) {
+                            cartfood cartFood = foodList.get(y);
+                            if ( cartFood.getfoodID().toString().equals(food.getFoodId())) {
+                                cartFood.setquantity(String.valueOf(quantityValue));
+                                cartFood.settotal(String.valueOf(total));
+                            } else {
+                                cartFood = new cartfood(food.getFoodId(),String.valueOf(quantityValue),String.valueOf(total));
+                                foodList.add(cartFood);
+                            }
+                        }
+
+                        mdatabaseRef.child(currentCart.getCartID()).setValue(currentCart);
+                        _progressDialog.dismiss();
+                        Intent intent = new Intent(getApplicationContext(), cartActivity.class);
+                        startActivityForResult(intent, 1);
+                        finish();
+                        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+
+                    }
+
+        }, 3000);
+
+
+    }
+
+        @Override
     public void onSliderClick(BaseSliderView slider) {
 
     }

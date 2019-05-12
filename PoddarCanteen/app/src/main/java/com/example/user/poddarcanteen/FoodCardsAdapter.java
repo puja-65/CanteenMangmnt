@@ -17,9 +17,15 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.BreakIterator;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.picasso.Picasso;
@@ -29,6 +35,7 @@ public class FoodCardsAdapter extends ArrayAdapter<Food> {
 
     public FoodCardsAdapter(Context context) {
         super(context, R.layout.food_card_item);
+
     }
 
     @NonNull
@@ -49,6 +56,8 @@ public class FoodCardsAdapter extends ArrayAdapter<Food> {
 
         Food food = getItem(position);
 
+
+
 //        holder.imageView.setImageResource(food.getFoodName());
         holder.tvTitle.setText(food.getFoodName());
         holder.tvSubtitle.setText(food.getFoodType());
@@ -66,6 +75,7 @@ public class FoodCardsAdapter extends ArrayAdapter<Food> {
     }
 
     static class ViewHolder {
+        public BreakIterator itemTitle;
         ImageView imageView;
         TextView tvTitle;
         TextView tvSubtitle;

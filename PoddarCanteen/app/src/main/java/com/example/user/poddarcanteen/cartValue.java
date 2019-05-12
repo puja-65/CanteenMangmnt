@@ -7,7 +7,8 @@ import java.util.HashMap;
 public class cartValue implements Serializable {
     private String cartID;
     private String userID;
-    public ArrayList<String> foodList = new ArrayList<String>();
+
+    public ArrayList<cartfood> foodList = new ArrayList<cartfood>();
 
 
 
@@ -27,7 +28,7 @@ public class cartValue implements Serializable {
     public String getUserID(){
         return userID;
     }
-    public ArrayList<String> getFoodList(){
+    public ArrayList<cartfood> getFoodList(){
         return foodList;
     }
 

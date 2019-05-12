@@ -169,14 +169,14 @@ public class LogIn extends AppCompatActivity {
     void showAdminHome(){
         Intent intent = new Intent(getApplicationContext(), AdmHome.class);
         startActivityForResult(intent, REQUEST_admHome);
-                finish();
+        finish();
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 
     void showUserHome(){
-        Intent intent = new Intent(getApplicationContext(), UserHome.class);
+        Intent intent = new Intent(getApplicationContext(), profilescreen.class);
         startActivityForResult(intent, REQUEST_usrHome);
-                finish();
+        finish();
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 

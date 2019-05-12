@@ -1,8 +1,6 @@
 package com.example.user.poddarcanteen;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class cartfood implements Serializable {
     private String foodID;
@@ -21,10 +19,20 @@ public class cartfood implements Serializable {
     public cartfood() {
     }
 
-    public String getCartID(){
+    public void setfoodID(String foodID){
+        this.foodID=foodID; }
+
+    public void setquantity(String quantity){
+        this.quantity=quantity; }
+
+        public void settotal(String total){
+        this.total=total; }
+
+
+    public String getfoodID(){
         return foodID;
     }
-    public String getUserID(){
+    public String getquantity(){
         return quantity;
     }
     public String gettotal(){
